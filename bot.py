@@ -5,6 +5,10 @@ from telegram.ext import Application, CommandHandler, CallbackQueryHandler, Cont
 from telegram.constants import ParseMode, ChatAction
 from telegram.ext.filters import BaseFilter
 
+from logger_config import setup_logger, log_error,  log_bot_startup, log_bot_shutdown, log_user_action
+from error_handler import handle_errors
+
+logger = setup_logger('tglog')
 user_data = {}
 
 EMOJIS = ['😀', '😂', '🤣', '😍', '🥰', '😎', '🤩', '🥳', '🤯', '👻', 
@@ -15,6 +19,7 @@ COLOR = ['🔴', '🔵', '🟢', '🟡',
 
 NAME, AGE, BIO = range(3)
 
+@handle_errors(logger)
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     user_name = user.first_name
@@ -41,7 +46,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await show_typing(update, context)
         await update.message.reply_text(welcome_text, parse_mode=ParseMode.MARKDOWN, reply_markup=reply_markup)
 
-async def show_typing(update: Update, context: ContextTypes.DEFAULT_TYPE, duration: float=1.0):
+async def show_typing(update: Update, context: ContextTypes.DEFAULT_TYPE, duration: float=0.5):
     await context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
     await asyncio.sleep(duration)
 
@@ -70,31 +75,42 @@ def get_keyboard():
     ]
     return InlineKeyboardMarkup(keyboard)       
 
+@handle_errors(logger)
 async def info(update: Update, context: ContextTypes.DEFAULT_TYPE):
     info_text = "Это бот, который делает разные вещи"
     await show_typing(update, context)
-    await update.message.reply_text(info_text)
+    message = update.message or update.callback_query.message
+    await message.reply_text(info_text)
 
+@handle_errors(logger)
 async def random_number(update: Update, context: ContextTypes.DEFAULT_TYPE):
     number = random.randint(1, 9)
     await show_typing(update, context)
-    await update.message.reply_text(text=f"Рандомные числа {number}")
+    message = update.message or update.callback_query.message
+    await message.reply_text(text=f"Рандомные числа {number}")
 
+@handle_errors(logger)
 async def color(update: Update, context: ContextTypes.DEFAULT_TYPE):
     color = ' '.join(random.choices(COLOR, k=1))
     await show_typing(update, context)
-    await update.message.reply_text(text=f"Случайный цвет: {color}")
+    message = update.message or update.callback_query.message
+    await message.reply_text(text=f"Случайный цвет: {color}")
 
+@handle_errors(logger)
 async def emoji(update: Update, context: ContextTypes.DEFAULT_TYPE):
     emojis = ' '.join(random.choices(EMOJIS, k=3))
     await show_typing(update, context)
-    await update.message.reply_text(text=f"Случайные эмодзи: {emojis}")
+    message = update.message or update.callback_query.message
+    await message.reply_text(text=f"Случайные эмодзи: {emojis}")
 
+@handle_errors(logger)
 async def date(update: Update, context: ContextTypes.DEFAULT_TYPE):
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     await show_typing(update, context)
-    await update.message.reply_text(f"Текущее время: {current_time}")
+    message = update.message or update.callback_query.message
+    await message.reply_text(f"Текущее время: {current_time}")
 
+@handle_errors(logger)
 async def dice(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await show_typing(update, context)
     await context.bot.send_dice(
@@ -102,6 +118,7 @@ async def dice(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=get_keyboard()
     )
 
+@handle_errors(logger)
 async def reroll_dice(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
@@ -110,12 +127,15 @@ async def reroll_dice(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=get_keyboard()
     )
 
+@handle_errors(logger)
 async def start_registration(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await show_typing(update, context)
     message = update.message or update.callback_query.message
     await message.reply_text("Привет, как тебя зовут?")
+    logger.info(f'regestration started for user: {update.effective_user.id}')
     return NAME
 
+@handle_errors(logger)
 async def get_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
 
@@ -124,25 +144,31 @@ async def get_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print(user_data[user_id])
 
     user_data[user_id]["name"] = update.message.text
+    logger.info(f'user: {user_id} name: {update.message.text}')
 
     await show_typing(update, context)
     message = update.message or update.callback_query.message
     await message.reply_text(f"Приятно познакомиться, {update.message.text}. Сколько тебе лет?")
     return AGE
 
+@handle_errors(logger)
 async def get_age(update: Update, context: ContextTypes.DEFAULT_TYPE):
     age = int(update.message.text)
     user_id = update.effective_user.id
 
     user_data[user_id]["age"] = age
+    logger.info(f'user: {user_id} age: {age}')
+
     await show_typing(update, context)
     message = update.message or update.callback_query.message
     await message.reply_text("Раскажи немного о себе")
     return BIO
 
+@handle_errors(logger)
 async def get_bio(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     user_data[user_id]["bio"] = update.message.text
+
     await show_typing(update, context)
     message = update.message or update.callback_query.message
     await message.reply_text(
@@ -151,8 +177,10 @@ async def get_bio(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f'Возраст: {user_data[user_id]["age"]}\n'
         f'Био: {user_data[user_id]["bio"]}'
     )
+    logger.info(f'regestration completed for user: {user_id}')
     return ConversationHandler.END
 
+@handle_errors(logger)
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
@@ -203,6 +231,8 @@ def main():
     app.add_handler(conv_handler)
 
     app.add_handler(CallbackQueryHandler(button_callback))
+
+    log_bot_startup(logger, 'startup')
 
     # app.post_init = setup
 

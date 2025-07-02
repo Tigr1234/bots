@@ -1,0 +1,23 @@
+2025-06-25 16:52:13 - tglog - INFO - log_bot_startup:47 - bot_started: startup
+2025-06-25 16:52:18 - tglog - INFO - log_user_action:37 - user: Fgjhjip, id: 5030476258-Команда start_registration
+2025-06-25 16:52:19 - tglog - INFO - start_registration:135 - regestration started for user: 5030476258
+2025-06-25 16:52:21 - tglog - INFO - log_user_action:37 - user: Fgjhjip, id: 5030476258-Команда get_name
+2025-06-25 16:52:21 - tglog - INFO - get_name:147 - user: 5030476258 name: 1
+2025-06-25 16:52:21 - tglog - INFO - log_user_action:37 - user: Fgjhjip, id: 5030476258-Команда get_age
+2025-06-25 16:52:21 - tglog - INFO - get_age:160 - user: 5030476258 age: 1
+2025-06-25 16:52:22 - tglog - INFO - log_user_action:37 - user: Fgjhjip, id: 5030476258-Команда get_bio
+2025-06-25 16:52:23 - tglog - INFO - get_bio:180 - regestration completed for user: 5030476258
+2025-06-25 16:52:33 - tglog - INFO - log_user_action:37 - user: Fgjhjip, id: 5030476258-Команда start
+2025-06-25 16:52:38 - tglog - INFO - log_user_action:37 - user: Fgjhjip, id: 5030476258-Команда button_callback
+2025-06-25 16:52:39 - tglog - INFO - log_user_action:37 - user: Fgjhjip, id: 5030476258-Команда info
+2025-06-25 16:52:39 - tglog - INFO - log_user_action:37 - user: Fgjhjip, id: 5030476258-Команда button_callback
+2025-06-25 16:52:40 - tglog - INFO - log_user_action:37 - user: Fgjhjip, id: 5030476258-Команда random_number
+2025-06-25 16:52:41 - tglog - INFO - log_user_action:37 - user: Fgjhjip, id: 5030476258-Команда button_callback
+2025-06-25 16:52:41 - tglog - INFO - log_user_action:37 - user: Fgjhjip, id: 5030476258-Команда color
+2025-06-25 16:52:42 - tglog - INFO - log_user_action:37 - user: Fgjhjip, id: 5030476258-Команда button_callback
+2025-06-25 16:52:42 - tglog - INFO - log_user_action:37 - user: Fgjhjip, id: 5030476258-Команда emoji
+2025-06-25 16:52:45 - tglog - INFO - log_user_action:37 - user: Fgjhjip, id: 5030476258-Команда button_callback
+2025-06-25 16:52:45 - tglog - INFO - log_user_action:37 - user: Fgjhjip, id: 5030476258-Команда date
+2025-06-25 16:52:46 - tglog - INFO - log_user_action:37 - user: Fgjhjip, id: 5030476258-Команда button_callback
+2025-06-25 16:52:47 - tglog - INFO - log_user_action:37 - user: Fgjhjip, id: 5030476258-Команда dice
+2025-07-02 16:36:22 - tglog - INFO - log_bot_startup:47 - bot_started: startup
